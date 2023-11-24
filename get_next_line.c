@@ -6,7 +6,7 @@
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 18:42:42 by maglagal          #+#    #+#             */
-/*   Updated: 2023/11/19 19:08:38 by maglagal         ###   ########.fr       */
+/*   Updated: 2023/11/24 16:40:21 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,60 +20,46 @@
     # define BUFFER_SIZE 999
 # endif
 
-// char    *make_line(int start, int end, char *buffer)
-// {
-//     char        *line;
-//     int         j;
-
-//     j = 0;
-//     line = malloc((end - start) + 1);
-//     if (!line)
-//         return (NULL);
-//     while((j + start) < end)
-//     {
-//         line[j] = buffer[j + start];
-//         j++;
-//     }
-//     line[j] = '\0';
-//     return (line);
-// }
-
 char    *get_next_line(int fd)
 { 
-    int             nbytes;
-    static char     buffer[BUFFER_SIZE];
-    char            temp[BUFFER_SIZE];
-    static int      i;
-    char            *line;
+    int                 nbytes;
+    static char         *buffer;
+    char                temp[BUFFER_SIZE];
+    static int          i;
+    char                *line;
 
+    line = NULL;
+    if (fd < 0)
+        return (NULL);
     while ((nbytes = read(fd, temp, BUFFER_SIZE)) > 0)
     {
-        if (!nbytes)
-            return (NULL);
-        printf("i -> %d\n", i);
-        buffer[i] = temp[0];
-        i++;
-        if (temp[0] == '\n' || temp[0] == '\0')
+        temp[nbytes] = '\0';
+        if (buffer == NULL)
+            buffer = ft_strdup(temp);
+        else
+            buffer = ft_strjoin(buffer, temp);
+        if (ft_strchr(buffer + i, '\n') != NULL)
         {
-            i++;
-            line = ft_strdup(buffer);
-            if (!line)
-                return (NULL);
             i = 0;
+            line = ft_strdup(buffer);
+            free(buffer);
+            buffer = NULL;
             return (line);
         }
+        i++;
     }
-    // while (i < BUFFER_SIZE && buffer[i] != '\n' && buffer[i] != '\0')
-    //     i++;
-    // end = i;
-    // if (i <= ft_strlen(buffer) && (buffer[i] == '\n' || buffer[i] == '\0')) 
-    // {
-    //     line = make_line(start, end, buffer);
-    //     start = ++i;
-    //     return (line);
-    // }
+    // printf("%d\n", ft_strlen(buffer));
+    if (nbytes == 0 && i > 0)
+    {
+        i = 0;
+        line = ft_strdup(buffer);
+        free(buffer);
+        buffer = NULL;
+        return (line);
+    }
     return (NULL);
 }
+
 
 int main()
 {
@@ -81,4 +67,8 @@ int main()
 
     fd = open("test.txt", O_RDWR | O_CREAT);
     printf("line -> %s\n", get_next_line(fd));
+    printf("line -> %s\n", get_next_line(fd));
+    printf("line -> %s\n", get_next_line(fd));
+    // printf("line -> %s\n", get_next_line(fd));
+    // printf("line -> %s\n", get_next_line(fd));
 }

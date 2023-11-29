@@ -6,7 +6,7 @@
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 18:42:42 by maglagal          #+#    #+#             */
-/*   Updated: 2023/11/29 21:22:57 by maglagal         ###   ########.fr       */
+/*   Updated: 2023/11/29 21:43:02 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char    *make_line(char **buffer, char **next_buffer, int *ptr_i, char **temp)
     line = ft_strdup(*buffer);
     if (!line)
     {
+        freeing_memory(temp);
         freeing_memory(next_buffer);
         return (freeing_memory(buffer));
     }
@@ -44,7 +45,11 @@ char    *make_line(char **buffer, char **next_buffer, int *ptr_i, char **temp)
         *buffer = ft_strdup(*next_buffer);
         freeing_memory(next_buffer);
         if (!*buffer)
+        {
+            freeing_memory(buffer); //if buffer already has value allocated
+            freeing_memory(temp);
             return (freeing_memory(&line));
+        }
     }
     freeing_memory(next_buffer);
     freeing_memory(temp);
@@ -78,7 +83,7 @@ char    *get_next_line(int fd)
     temp = NULL;
     if (fd < 0)
         return (NULL);
-    temp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+    temp = malloc(sizeof(char) * BUFFER_SIZE);
     if (!temp)
         return (freeing_memory(&buffer));
     nbytes = read(fd, temp, BUFFER_SIZE);
@@ -114,7 +119,7 @@ char    *get_next_line(int fd)
                 line_rest = ft_strdup(check_nl);
                 if (!line_rest)
                 {
-                    freeing_memory(&temp);    
+                    freeing_memory(&temp);
                     return (freeing_memory(&buffer));
                 }
             }

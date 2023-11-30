@@ -6,7 +6,7 @@
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 18:24:17 by maglagal          #+#    #+#             */
-/*   Updated: 2023/11/30 18:24:18 by maglagal         ###   ########.fr       */
+/*   Updated: 2023/11/30 20:32:17 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,21 @@ size_t	ft_strlen(const char *s)
 char	*ft_strdup(const char *s1)
 {
 	size_t	i;
-	char	*p;
+	size_t	s1_len;
+	char	*ptr;
 
-	if (!s1)
-		return (NULL);
 	i = 0;
-	p = malloc(sizeof(char) * ft_strlen(s1) + 1);
-	if (!p)
+	s1_len = ft_strlen(s1);
+	ptr = malloc(s1_len + 1);
+	if (!ptr)
 		return (NULL);
-	while (i < ft_strlen(s1) + 1)
+	while (i < s1_len)
 	{
-		p[i] = s1[i];
+		ptr[i] = s1[i];
 		i++;
 	}
-	p[i - 1] = '\0';
-	return (p);
+	ptr[i] = '\0';
+	return (ptr);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)

@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/19 18:42:42 by maglagal          #+#    #+#             */
-/*   Updated: 2023/12/01 12:06:38 by maglagal         ###   ########.fr       */
+/*   Created: 2023/11/30 20:44:23 by maglagal          #+#    #+#             */
+/*   Updated: 2023/12/01 12:03:35 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "get_next_line.h"
@@ -99,35 +100,42 @@ char	*check_newline(char **buffer, char **r_buffer, char **line_rest)
 
 char	*get_next_line(int fd)
 {
+	static char	*buffer[OPEN_MAX];
 	int			nbytes;
-	static char	*buffer;
 	char		*r_buffer;
 	char		*line_rest;
 
 	line_rest = NULL;
 	r_buffer = malloc(BUFFER_SIZE + 1);
-	if (fd < 0 || !r_buffer || read(fd, "", 0) < 0)
+	if (fd < 0 || fd >= OPEN_MAX || !r_buffer || read(fd, "", 0) < 0)
 	{
-		freeing_memory(&buffer);
+		freeing_memory(&buffer[fd]);
 		return (freeing_memory(&r_buffer));
 	}
 	nbytes = read(fd, r_buffer, BUFFER_SIZE);
-	while (nbytes > 0 || (buffer && ft_strchr(buffer, '\n')))
+	while (nbytes > 0 || (buffer[fd] && ft_strchr(buffer[fd], '\n')))
 	{
-		making_buffer(&buffer, &r_buffer, nbytes);
-		if (buffer && check_newline(&buffer, &r_buffer, &line_rest))
-			return (make_line(&buffer, &line_rest, &r_buffer));
+		making_buffer(&buffer[fd], &r_buffer, nbytes);
+		if (buffer[fd] && check_newline(&buffer[fd], &r_buffer, &line_rest))
+			return (make_line(&buffer[fd], &line_rest, &r_buffer));
 		nbytes = read(fd, r_buffer, BUFFER_SIZE);
 	}
 	freeing_memory(&r_buffer);
-	if (buffer && nbytes == 0)
-		return (make_line(&buffer, &line_rest, &r_buffer));
-	return (freeing_memory(&buffer));
+	if (buffer[fd] && nbytes == 0)
+		return (make_line(&buffer[fd], &line_rest, &r_buffer));
+	return (freeing_memory(&buffer[fd]));
 }
 
 // int main()
 // {
-// 	int fd;
-//    	fd = open("test.txt", O_RDWR | O_CREAT);	
-//    	printf("line -> %s\n", get_next_line(fd));
+//     int fd, fd1, fd2;	
+//     fd = open("test.txt", O_RDWR | O_CREAT);
+//     fd1 = open("test1.txt", O_RDWR | O_CREAT);
+//     fd2 = open("test2.txt", O_RDWR | O_CREAT);	
+//     printf("line -> %s\n", get_next_line(fd));
+//     printf("line -> %s\n", get_next_line(fd1));
+//     printf("line -> %s\n", get_next_line(fd2));
+//     printf("line -> %s\n", get_next_line(fd));
+//     printf("line -> %s\n", get_next_line(fd1));
+//     printf("line -> %s\n", get_next_line(fd2));
 // }

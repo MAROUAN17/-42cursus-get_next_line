@@ -6,24 +6,20 @@
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 18:42:42 by maglagal          #+#    #+#             */
-/*   Updated: 2023/12/01 12:06:38 by maglagal         ###   ########.fr       */
+/*   Updated: 2023/12/04 11:40:38 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "get_next_line.h"
 
-char	*freeing_memory(char **ptr)
+static char	*freeing_memory(char **ptr)
 {
 	free(*ptr);
 	*ptr = NULL;
 	return (NULL);
 }
 
-char	*make_line(char **buffer, char **next_buffer, char **r_buffer)
+static char	*make_line(char **buffer, char **next_buffer, char **r_buffer)
 {
 	char	*line;
 
@@ -50,7 +46,7 @@ char	*make_line(char **buffer, char **next_buffer, char **r_buffer)
 	return (line);
 }
 
-char	*making_buffer(char **buffer, char **r_buffer, int nbytes)
+static char	*making_buffer(char **buffer, char **r_buffer, int nbytes)
 {
 	char	*temp_buffer;
 
@@ -75,7 +71,7 @@ char	*making_buffer(char **buffer, char **r_buffer, int nbytes)
 	return (*buffer);
 }
 
-char	*check_newline(char **buffer, char **r_buffer, char **line_rest)
+static char	*check_newline(char **buffer, char **r_buffer, char **line_rest)
 {
 	char	*check_nl;
 
@@ -105,8 +101,8 @@ char	*get_next_line(int fd)
 	char		*line_rest;
 
 	line_rest = NULL;
-	r_buffer = malloc(BUFFER_SIZE + 1);
-	if (fd < 0 || !r_buffer || read(fd, "", 0) < 0)
+	r_buffer = malloc((size_t)BUFFER_SIZE + 1);
+	if (fd < 0 || fd > OPEN_MAX || !r_buffer || read(fd, "", 0) < 0)
 	{
 		freeing_memory(&buffer);
 		return (freeing_memory(&r_buffer));
@@ -124,10 +120,3 @@ char	*get_next_line(int fd)
 		return (make_line(&buffer, &line_rest, &r_buffer));
 	return (freeing_memory(&buffer));
 }
-
-// int main()
-// {
-// 	int fd;
-//    	fd = open("test.txt", O_RDWR | O_CREAT);	
-//    	printf("line -> %s\n", get_next_line(fd));
-// }

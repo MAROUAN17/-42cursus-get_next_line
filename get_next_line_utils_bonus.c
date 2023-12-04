@@ -6,11 +6,11 @@
 /*   By: maglagal <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 20:44:48 by maglagal          #+#    #+#             */
-/*   Updated: 2023/12/01 12:05:50 by maglagal         ###   ########.fr       */
+/*   Updated: 2023/12/02 11:58:08 by maglagal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {

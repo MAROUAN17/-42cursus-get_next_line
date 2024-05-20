@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
 
 static char	*freeing_memory(char **ptr)
 {
@@ -95,10 +93,6 @@ static char	*check_newline(char **buffer, char **r_buffer, char **line_rest)
 	return (check_nl);
 }
 
-void	a()
-{
-	system("leaks a.out");
-}
 char	*get_next_line(int fd)
 {
 	int			nbytes;
@@ -126,74 +120,4 @@ char	*get_next_line(int fd)
 	if (buffer && nbytes == 0)
 		return (make_line(&buffer, &line_rest, &r_buffer));
 	return (freeing_memory(&buffer));
-}
-
-int main()
-{
-	char *line;
-	int fd = open("text.txt", O_RDONLY);
-	
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-    line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
-	line = get_next_line(fd);
-    printf("%s", line);
-    free(line);
 }
